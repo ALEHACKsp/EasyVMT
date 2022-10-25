@@ -29,7 +29,6 @@ public:
         vmt = new uintptr_t[virtualTableSize + 1];
 
         // Make a copy of the entire vTable.
-        // Set the vTable pointer to our copy.
         memcpy(vmt, &originalAddress[-1], (sizeof(uintptr_t) * virtualTableSize) + sizeof(uintptr_t));
     }
 
