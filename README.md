@@ -21,3 +21,6 @@ int main()
    virtualMethodHook->Hook(YourDetourFunction, virtualIndex);
 }
 ```
+# To Do
+- Update code.
+- Make it as secure as possible.
