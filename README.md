@@ -23,4 +23,4 @@ int main()
 ```
 # To Do
 - Update code.
-- Make it as secure as possible.
+- Make it as stealth as possible.
