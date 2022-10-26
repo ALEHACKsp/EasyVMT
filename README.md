@@ -8,10 +8,12 @@ Example usage:
 
 // -------------------------------------------------------------------------------
 
-class ExampleClass {
+class ExampleClass 
+{
 public:
     // Starts at 0.
-    virtual void ExampleFunction(int a) {
+    virtual void ExampleFunction(int a) 
+    {
         std::cout << a << std::endl;
     }
 };
@@ -21,13 +23,15 @@ public:
 typedef void(__stdcall* ExampleFunctionFn)(int);
 inline ExampleFunctionFn originalExampleFunction = nullptr;
 
-void __stdcall ExampleFunctionHook(int a) {
+void __stdcall ExampleFunctionHook(int a) 
+{
     return originalExampleFunction(9999999);
 }
 
 // -------------------------------------------------------------------------------
 
-int main() {
+int main() 
+{
     ExampleClass* Example = new ExampleClass();
 
     EasyVMT* VMT1 = new EasyVMT(Example);
