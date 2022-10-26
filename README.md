@@ -4,23 +4,50 @@ A header only easy to use VMT hooking class.
 Example usage:
 
 ```javascript
+#include <iostream>
 
-unsigned int GetVirtualFunction(void* virtualClass, unsigned int virtualIndex)
-{
-    return static_cast<unsigned int>((*static_cast<int**>(virtualClass))[virtualIndex]);
+#include "VMT_Lib.hpp"
+
+// ----------------------------------------------------------------------------------------------------------------------
+
+class ExampleClass {
+public:
+    // Starts at 0.
+    virtual void ExampleFunction(int a) {
+        std::cout << a << std::endl;
+    }
+};
+
+// ----------------------------------------------------------------------------------------------------------------------
+
+typedef void(__stdcall* ExampleFunctionFn)(int);
+inline ExampleFunctionFn originalExampleFunction = nullptr;
+
+void __stdcall ExampleFunctionHook(int a) {
+    return originalExampleFunction(9999999);
 }
-    
-int main()
-{
-   CVMT* virtualMethodHook = new CVMT(dummyClass);
-   
-   void* addr = reinterpret_cast<void*>(GetVirtualFunction(yourClass, yourIndex));
-   
-   yourOriginal = (YourOriginalFn)addr;
-   
-   virtualMethodHook->Hook(YourDetourFunction, virtualIndex);
+
+// ----------------------------------------------------------------------------------------------------------------------
+
+int main() {
+    ExampleClass* Example = new ExampleClass();
+
+    VMT* VMT1 = new VMT(Example);
+
+    originalExampleFunction = (ExampleFunctionFn)VMT1->GetVirtualFunction(Example, 0);
+
+    VMT1->Hook(ExampleFunctionHook, 0);
+    std::cout << "0x" << originalExampleFunction << std::endl;
+    std::cout << "0x" << VMT1->GetOriginalAddress() << std::endl;
+
+    Example->ExampleFunction(1337);
+
+    VMT1->Unhook();
+
+    Example->ExampleFunction(1337);
+
+    system("pause");
 }
+
+// ----------------------------------------------------------------------------------------------------------------------
 ```
-# To Do
-- Update code.
-- Make it as stealth as possible.
