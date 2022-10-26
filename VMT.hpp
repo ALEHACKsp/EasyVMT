@@ -1,66 +1,70 @@
 #pragma once
 
-#include <Windows.h>
+#include <cstdint>
 
-class CVMT
-{
+class VMT {
 private:
     uintptr_t* vmt;
 public:
-    uintptr_t** vTableAddr     = nullptr;
+    uintptr_t** vTableAddress = nullptr;
     uintptr_t* originalAddress = nullptr;
-    uint32_t methodCount       = 0;
+    size_t virtualClassFunctionCount = 0;
 
     // ----------------------------------------------------------------------------------------------------------------------
 
-    CVMT(void* vTableClass)
-    {
-        this->vTableAddr = reinterpret_cast<uintptr_t**>(vTableClass);
+    inline unsigned int GetVirtualFunction(void* virtualClass, unsigned int virtualIndex) {
+        return static_cast<unsigned int>((*static_cast<int**>(virtualClass))[virtualIndex]);
+    }
 
-        size_t virtualTableSize = 0;
+    // ----------------------------------------------------------------------------------------------------------------------
 
-        // Acquire the amount of data inside the virtual table.
-        while (reinterpret_cast<uintptr_t*>(*this->vTableAddr)[virtualTableSize])
-            virtualTableSize++;
+    inline VMT(void* virtualClass) {
+        vTableAddress = reinterpret_cast<uintptr_t**>(virtualClass);
+
+        // Acquire the amount of functions inside the virtual class.
+        while (reinterpret_cast<uintptr_t*>(*vTableAddress)[virtualClassFunctionCount]) {
+            virtualClassFunctionCount++;
+        }
 
         // Set the original.
-        originalAddress = *this->vTableAddr;
+        originalAddress = *vTableAddress;
 
-        vmt = new uintptr_t[virtualTableSize + 1];
+        vmt = new uintptr_t[virtualClassFunctionCount + 1];
 
         // Make a copy of the entire vTable.
-        memcpy(vmt, &originalAddress[-1], (sizeof(uintptr_t) * virtualTableSize) + sizeof(uintptr_t));
+        memcpy(vmt, &originalAddress[-1], (sizeof(uintptr_t) * virtualClassFunctionCount) + sizeof(uintptr_t));
     }
 
     // ----------------------------------------------------------------------------------------------------------------------
 
-    void Hook(void* detourFunction, size_t methodIndex)
-    {
-        vmt[methodIndex + 1] = reinterpret_cast<uintptr_t>(detourFunction);
-        *this->vTableAddr = &vmt[1];
+    inline void Hook(void* detourFunction, size_t functionIndex) {
+        // A simple sanity check to ensure that are hook is valid and in valid boundaries.
+        bool isValidHook = detourFunction != nullptr && functionIndex >= 0 && functionIndex <= virtualClassFunctionCount;
+
+        if (isValidHook) {
+            vmt[functionIndex + 1] = reinterpret_cast<uintptr_t>(detourFunction);
+            *vTableAddress = &vmt[1];
+        }
     }
 
     // ----------------------------------------------------------------------------------------------------------------------
 
-    void Unhook()
-    {
-        *this->vTableAddr = originalAddress;
+    inline void Unhook() {
+        *vTableAddress = originalAddress;
         delete vmt;
     }
 
     // ----------------------------------------------------------------------------------------------------------------------
 
-    uintptr_t* GetOriginalAddress()
-    {
-        if (originalAddress)
+    inline uintptr_t* GetOriginalAddress() {
+        if (originalAddress != nullptr)
             return originalAddress;
     }
 
     // ----------------------------------------------------------------------------------------------------------------------
 
     template<typename Fn>
-    Fn GetOriginalMethod(size_t methodIndex)
-    {
+    inline Fn GetOriginalMethod(size_t methodIndex) {
         return reinterpret_cast<Fn>(originalAddress[methodIndex]);
     }
 
