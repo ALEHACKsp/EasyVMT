@@ -32,7 +32,7 @@ void __stdcall ExampleFunctionHook(int a) {
 int main() {
     ExampleClass* Example = new ExampleClass();
 
-    VMT* VMT1 = new VMT(Example);
+    EasyVMT* VMT1 = new EasyVMT(Example);
 
     originalExampleFunction = (ExampleFunctionFn)VMT1->GetVirtualFunction(Example, 0);
 
