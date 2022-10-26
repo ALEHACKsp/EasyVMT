@@ -1,5 +1,5 @@
-# VMT
-A header only easy to use VMT hooking class.
+# EasyVMT
+A safe header only easy to use VMT hooking class.
 
 Example usage:
 
