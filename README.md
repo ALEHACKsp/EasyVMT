@@ -37,8 +37,6 @@ int main() {
     originalExampleFunction = (ExampleFunctionFn)VMT1->GetVirtualFunction(Example, 0);
 
     VMT1->Hook(ExampleFunctionHook, 0);
-    std::cout << "0x" << originalExampleFunction << std::endl;
-    std::cout << "0x" << VMT1->GetOriginalAddress() << std::endl;
 
     Example->ExampleFunction(1337);
 
