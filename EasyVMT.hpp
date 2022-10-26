@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-class VMT {
+class EasyVMT {
 private:
     uintptr_t* vmt;
 public:
@@ -18,7 +18,7 @@ public:
 
     // ----------------------------------------------------------------------------------------------------------------------
 
-    inline VMT(void* virtualClass) {
+    inline EasyVMT(void* virtualClass) {
         vTableAddress = reinterpret_cast<uintptr_t**>(virtualClass);
 
         // Acquire the amount of functions inside the virtual class.
