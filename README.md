@@ -6,8 +6,6 @@ Example usage:
 ```javascript
 #include <iostream>
 
-#include "VMT_Lib.hpp"
-
 // -------------------------------------------------------------------------------
 
 class ExampleClass {
