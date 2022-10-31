@@ -6,8 +6,6 @@ Example usage:
 ```javascript
 #include <iostream>
 
-// -------------------------------------------------------------------------------
-
 class ExampleClass 
 {
 public:
@@ -18,8 +16,6 @@ public:
     }
 };
 
-// -------------------------------------------------------------------------------
-
 typedef void(__stdcall* ExampleFunctionFn)(int);
 inline ExampleFunctionFn originalExampleFunction = nullptr;
 
@@ -27,8 +23,6 @@ void __stdcall ExampleFunctionHook(int a)
 {
     return originalExampleFunction(9999999);
 }
-
-// -------------------------------------------------------------------------------
 
 int main() 
 {
@@ -48,6 +42,3 @@ int main()
 
     system("pause");
 }
-
-// -------------------------------------------------------------------------------
-```
