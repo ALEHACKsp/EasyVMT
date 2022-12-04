@@ -1,6 +1,8 @@
 # EasyVMT
 A safe header only easy to use VMT hooking class.
 
+- Bypasses all detections from this project: https://github.com/altoid29/NoVMT
+
 Example usage:
 
 ```javascript
