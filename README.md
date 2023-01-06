@@ -1,6 +1,8 @@
 # EasyVMT
 A safe header only easy to use VMT hooking class.
 
+Note from 1.6.2023 - Changes are going to be made and this is going to be improved soon.
+
 - Bypasses all detections from this project: https://github.com/altoid29/NoVMT
 
 Example usage:
